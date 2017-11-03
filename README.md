@@ -143,7 +143,7 @@ IMAGE_INSTALL += "htop"
 5. Ajouter un serveur SSH et configurer le reseau
 -------------------------------------------------
 
-$ cat  ../meta-gei/recipes-core/images/my_image.bb
+$ cat  ../meta-gei/recipes-core/images/gei-image.bb
 
 require recipes-core/images/core-image-{minimal,sato}.bb
 
