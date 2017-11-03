@@ -1,8 +1,7 @@
 Creer un compte et se connecter      ou     utiliser votre machine
 - ssh ?user?@geitp-dimer2             |     - il faut installer quelque paquet 
-                                      |	auparavant (cf google yocto prerequisite)
-                                      |     http://www.yoctoproject.org/docs/2.3.2/
-				      |     mega-manual/mega-manual.html#packages
+                                      |	    auparavant (cf google yocto prerequisite)
+                                      |     http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#packages
 
 ---------------------------------------
 Pour la premiere utilisation seulement:
@@ -10,11 +9,12 @@ Pour la premiere utilisation seulement:
 
 - On recupere les soures
   git clone -b rocko git://git.yoctoproject.org/poky.git
-      cd poky
-      	 git clone -b rocko git://git.openembedded.org/meta-openembedded
-	     git clone -b rocko git://git.yoctoproject.org/meta-raspberrypi
+  cd poky
+  git clone -b rocko git://git.openembedded.org/meta-openembedded
+  git clone -b rocko git://git.yoctoproject.org/meta-raspberrypi
+  git clone -b rocko https://github.com/aragua/meta-gei.git
 
-	     source ./oe-init-build-env
+  source ./oe-init-build-env
 
 - il vous faut configurer dans conf/
   - local.conf
@@ -64,7 +64,7 @@ Personnalisation
 1. Creer son propre layer
 -------------------------
 
-http://www.yoctoproject.org/docs/2.3.2/mega-manual/mega-manual.html#creating-a-general-layer-using-the-yocto-layer-script
+http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#creating-a-general-layer-using-the-yocto-layer-script
 
 adminlocal@geitp-dimer1:~/poky/build$ yocto-layer create meta-gei -o ..
 
@@ -116,7 +116,7 @@ recompiler votre image
 3. Utiliser systemd comme systeme d'init
 ----------------------------------------
 
-http://www.yoctoproject.org/docs/2.3.2/mega-manual/mega-manual.html#using-systemd-exclusively
+http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#using-systemd-exclusively
 
 $ cat ../meta-gei/conf/distro/gei.conf
 require conf/distro/poky.conf
