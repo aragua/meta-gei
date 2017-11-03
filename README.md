@@ -186,3 +186,9 @@ do_install () {
 FILES_${PN} = " \
 	       ${sysconfdir}/* \
 "
+
+6. Ajout de librairies dans le projet
+Lorque des librairies externes sont utilisées dans le projet, on peut dire à BitBake de les introduire dans la toolchain avec : 
+``` 
+bitbake *nom_de_l_image* -c populate_sdk
+``` 
