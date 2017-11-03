@@ -1,7 +1,7 @@
-Creer un compte et se connecter      ou     utiliser votre machine
-- ssh ?user?@geitp-dimer2             |     - il faut installer quelque paquet 
-                                      |	    auparavant (cf google yocto prerequisite)
-                                      |     http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#packages
+| Creer un compte et se connecter |                  utiliser votre machine                                        |
+|---------------------------------|--------------------------------------------------------------------------------|
+|- ssh ?user?@geitp-dimer2        |  - il faut installer quelque paquet auparavant (cf google yocto prerequisite)  |
+|                                 |     http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#packages |
 
 ---------------------------------------
 Pour la premiere utilisation seulement:
