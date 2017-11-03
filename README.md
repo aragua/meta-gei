@@ -20,7 +20,7 @@ Pour la premiere utilisation seulement:
   - local.conf
 	- INHERIT += " rm_work "
 	- MACHINE = "raspberrypi3"
-    	- ENABLE_UART = "1"
+	- ENABLE_UART = "1"
   - bblayers.conf : ajouter les layers manquants
 	- ??/poky/meta-openembedded/meta-oe
 	- ??/poky/meta-openembedded/meta-python (really????)
