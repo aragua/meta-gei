@@ -1,0 +1,10 @@
+[Match]
+Name=@@interface@@
+
+[Network]
+DHCP=ipv4
+LinkLocalAddressing=no
+IPv6AcceptRouterAdvertisements=no
+
+[DHCP]
+ClientIdentifier=mac
