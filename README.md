@@ -207,3 +207,29 @@ Lorque des librairies externes sont utilisées dans le projet, on peut dire à B
 ```bash
 $ bitbake *nom_de_l_image* -c populate_sdk
 ``` 
+
+------------------------------------------------------
+Nouvelle version de meta-gei pour faire marcher le CAN
+------------------------------------------------------
+
+Pourquoi ça marchait pas ? Parce qu'on devait modifier la variable KERNEL_DEVICETREE dans local.conf et pas dans le .bb ou .bbappend !
+
+On a fait les modifs dans local.conf. En plus, on a rajouté ces lignes dans config.txt dans la partition du boot statiquement dans les configs de Yocto (vous avez pas à le faire) : 
+
+```
+dtoverlay=mcp2515-can0,oscillator=16000000,interrupt=25
+```
+
+Vu que local.conf est dans build, on utilise un template de conf qui est lui dans meta-gei
+
+Au lieu de faire le source normal, faire un
+
+```
+$ TEMPLATECONF=meta-gei/userconf source ./oe-init-build-env
+```
+
+A partir de là, il faut faire des trucs sur la carte
+http://skpang.co.uk/catalog/images/raspberrypi/pi_2/PICAN2SMPSUGB.pdf ça, notamment le ip link (on est pas allé plus loin)
+
+et vamos. Bises, Lulu.
+ 
