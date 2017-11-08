@@ -1,26 +1,26 @@
-Creer un compte et se connecter      ou     utiliser votre machine
-- ssh ?user?@geitp-dimer2             |     - il faut installer quelque paquet 
-                                      |	auparavant (cf google yocto prerequisite)
-                                      |     http://www.yoctoproject.org/docs/2.3.2/
-				      |     mega-manual/mega-manual.html#packages
+| Creer un compte et se connecter |                  utiliser votre machine                                        |
+|---------------------------------|--------------------------------------------------------------------------------|
+|- ssh ?user?@geitp-dimer2        |  - il faut installer quelque paquet auparavant (cf google yocto prerequisite)  |
+|                                 |     http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#packages |
 
 ---------------------------------------
 Pour la premiere utilisation seulement:
 ---------------------------------------
 
 - On recupere les soures
-  git clone -b rocko git://git.yoctoproject.org/poky.git
-      cd poky
-      	 git clone -b rocko git://git.openembedded.org/meta-openembedded
-	     git clone -b rocko git://git.yoctoproject.org/meta-raspberrypi
+  * git clone -b rocko git://git.yoctoproject.org/poky.git
+  * cd poky
+  * git clone -b rocko git://git.openembedded.org/meta-openembedded
+  * git clone -b rocko git://git.yoctoproject.org/meta-raspberrypi
+  * git clone -b rocko https://github.com/aragua/meta-gei.git
 
-	     source ./oe-init-build-env
+  source ./oe-init-build-env
 
 - il vous faut configurer dans conf/
   - local.conf
 	- INHERIT += " rm_work "
 	- MACHINE = "raspberrypi3"
-    	- ENABLE_UART = "1"
+	- ENABLE_UART = "1"
   - bblayers.conf : ajouter les layers manquants
 	- ??/poky/meta-openembedded/meta-oe
 	- ??/poky/meta-openembedded/meta-python (really????)
@@ -64,7 +64,7 @@ Personnalisation
 1. Creer son propre layer
 -------------------------
 
-http://www.yoctoproject.org/docs/2.3.2/mega-manual/mega-manual.html#creating-a-general-layer-using-the-yocto-layer-script
+http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#creating-a-general-layer-using-the-yocto-layer-script
 
 adminlocal@geitp-dimer1:~/poky/build$ yocto-layer create meta-gei -o ..
 
@@ -116,7 +116,7 @@ recompiler votre image
 3. Utiliser systemd comme systeme d'init
 ----------------------------------------
 
-http://www.yoctoproject.org/docs/2.3.2/mega-manual/mega-manual.html#using-systemd-exclusively
+http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#using-systemd-exclusively
 
 $ cat ../meta-gei/conf/distro/gei.conf
 require conf/distro/poky.conf
@@ -143,7 +143,7 @@ IMAGE_INSTALL += "htop"
 5. Ajouter un serveur SSH et configurer le reseau
 -------------------------------------------------
 
-$ cat  ../meta-gei/recipes-core/images/my_image.bb
+$ cat  ../meta-gei/recipes-core/images/gei-image.bb
 
 require recipes-core/images/core-image-{minimal,sato}.bb
 
@@ -186,3 +186,9 @@ do_install () {
 FILES_${PN} = " \
 	       ${sysconfdir}/* \
 "
+
+6. Ajout de librairies dans le projet
+Lorque des librairies externes sont utilisées dans le projet, on peut dire à BitBake de les introduire dans la toolchain avec : 
+``` 
+bitbake *nom_de_l_image* -c populate_sdk
+``` 
