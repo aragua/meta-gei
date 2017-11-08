@@ -1,6 +1,6 @@
-| Creer un compte et se connecter |                  utiliser votre machine                                        |
+| Créer un compte et se connecter |                  utiliser votre machine                                        |
 |---------------------------------|--------------------------------------------------------------------------------|
-|- ssh ?user?@geitp-dimer2        |  - il faut installer quelque paquet auparavant (cf google yocto prerequisite)  |
+|- `ssh ?user?@geitp-dimer2`        |  - il faut installer quelque paquet auparavant (cf google yocto prerequisite)  |
 |                                 |     http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#packages |
 
 ---------------------------------------
@@ -63,9 +63,8 @@ Se connecter a la target via lien serie (minicom
 Personnalisation
 ----------------
 
-1. Creer son propre layer
+#### 1. Créer son propre layer
 -------------------------
-
 http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#creating-a-general-layer-using-the-yocto-layer-script
 
 ```
@@ -108,9 +107,8 @@ adminlocal@geitp-dimer1:~/poky/build$ bitbake example
 # doit construire le paquet example pour notre target
 ```
 
-2. Creer une "distro" basé sur poky
+#### 2. Créer une "distro" basé sur poky
 -----------------------------------
-
 ```
 $ mkdir meta-gei/conf/distro
 $ cat ../meta-gei/conf/distro/gei.conf
@@ -121,9 +119,8 @@ $
 dans local.conf, mettre DISTRO="gei"
 recompiler votre image
 
-3. Utiliser systemd comme systeme d'init
-----------------------------------------
-
+#### 3. Utiliser systemd comme systeme d'init
+--------------------------------------
 http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#using-systemd-exclusively
 
 ```
@@ -139,9 +136,8 @@ VIRTUAL-RUNTIME_initscripts = ""
 $
 ```
 
-4. Creer votre image
+#### 4. Créer votre image
 --------------------
-
 ```
 $ mkdir ../meta-gei/recipes-core/images/
 $ cat  ../meta-gei/recipes-core/images/my_image.bb
@@ -151,7 +147,7 @@ require recipes-core/images/core-image-minimal.bb
 IMAGE_INSTALL += "htop"
 ```
 
-5. Ajouter un serveur SSH et configurer le reseau
+#### 5. Ajouter un serveur SSH et configurer le reseau
 -------------------------------------------------
 
 ```
@@ -202,7 +198,7 @@ FILES_${PN} = " \
 "
 ```
 
-6. Ajout de librairies dans le projet
+#### 6. Ajout de librairies dans le projet
 Lorque des librairies externes sont utilisées dans le projet, on peut dire à BitBake de les introduire dans la toolchain avec : 
 ```bash
 $ bitbake *nom_de_l_image* -c populate_sdk
