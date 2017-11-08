@@ -8,37 +8,39 @@ Pour la premiere utilisation seulement:
 ---------------------------------------
 
 - On recupere les soures
-  * git clone -b rocko git://git.yoctoproject.org/poky.git
-  * cd poky
-  * git clone -b rocko git://git.openembedded.org/meta-openembedded
-  * git clone -b rocko git://git.yoctoproject.org/meta-raspberrypi
-  * git clone -b rocko https://github.com/aragua/meta-gei.git
+  * `git clone -b rocko git://git.yoctoproject.org/poky.git`
+  * `cd poky`
+  * `git clone -b rocko git://git.openembedded.org/meta-openembedded`
+  * `git clone -b rocko git://git.yoctoproject.org/meta-raspberrypi`
+  * `git clone -b rocko https://github.com/aragua/meta-gei.git`
 
+```bash
   source ./oe-init-build-env
+```
 
 - il vous faut configurer dans conf/
   - local.conf
-	- INHERIT += " rm_work "
-	- MACHINE = "raspberrypi3"
-	- ENABLE_UART = "1"
+	- `INHERIT += " rm_work "`
+	- `MACHINE = "raspberrypi3"`
+	- `ENABLE_UART = "1"`
   - bblayers.conf : ajouter les layers manquants
-	- ??/poky/meta-openembedded/meta-oe
-	- ??/poky/meta-openembedded/meta-python (really????)
-	- ??/poky/meta-raspberrypi
+	- `??/poky/meta-openembedded/meta-oe`
+	- `??/poky/meta-openembedded/meta-python (really????)`
+	- `??/poky/meta-raspberrypi`
 
 ---------------
-A chaque build:
+À chaque build:
 ---------------
 
-Dans poky/ on source l environnement si ce n est pas deja fait et on lance le build.
-
-     source ./oe-init-build-env
-     bitbake core-image-minimal
+Dans poky/ on source l'environnement si ce n est pas deja fait et on lance le build.
+```bash
+     $ source ./oe-init-build-env
+     $ bitbake core-image-minimal
                    ^ nom de l'image a construire.
 		   il y a une recette (.bb) associé.
 
-     bitbake core-image-sato -> image avec interface graphique
-
+     $ bitbake core-image-sato -> image avec interface graphique
+```
 Images disponibles:
 http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#ref-images
 
@@ -66,6 +68,7 @@ Personnalisation
 
 http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#creating-a-general-layer-using-the-yocto-layer-script
 
+```
 adminlocal@geitp-dimer1:~/poky/build$ yocto-layer create meta-gei -o ..
 
 layer output dir already exists, exiting. (..)
@@ -80,6 +83,7 @@ Please enter the version number you'd like to use for your bbappend file (this s
 New layer created in ../meta-gei.
 
 Don't forget to add it to your BBLAYERS (for details see ../meta-gei/README).
+
 adminlocal@geitp-dimer1:~/poky/build$ tree ../meta-gei/
 ../meta-gei/
 ├── conf
@@ -99,16 +103,20 @@ adminlocal@geitp-dimer1:~/poky/build$ tree ../meta-gei/
 		            └── example_0.1.bbappend
 
 7 directories, 8 files
+
 adminlocal@geitp-dimer1:~/poky/build$ bitbake example
 # doit construire le paquet example pour notre target
+```
 
 2. Creer une "distro" basé sur poky
 -----------------------------------
 
+```
 $ mkdir meta-gei/conf/distro
 $ cat ../meta-gei/conf/distro/gei.conf
 require conf/distro/poky.conf
 $
+```
 
 dans local.conf, mettre DISTRO="gei"
 recompiler votre image
@@ -118,6 +126,7 @@ recompiler votre image
 
 http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#using-systemd-exclusively
 
+```
 $ cat ../meta-gei/conf/distro/gei.conf
 require conf/distro/poky.conf
 
@@ -128,21 +137,24 @@ DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"
 
 VIRTUAL-RUNTIME_initscripts = ""
 $
+```
 
 4. Creer votre image
 --------------------
 
+```
 $ mkdir ../meta-gei/recipes-core/images/
 $ cat  ../meta-gei/recipes-core/images/my_image.bb
 
 require recipes-core/images/core-image-minimal.bb
 
 IMAGE_INSTALL += "htop"
-
+```
 
 5. Ajouter un serveur SSH et configurer le reseau
 -------------------------------------------------
 
+```
 $ cat  ../meta-gei/recipes-core/images/gei-image.bb
 
 require recipes-core/images/core-image-{minimal,sato}.bb
@@ -152,6 +164,7 @@ IMAGE_INSTALL += "htop"
 EXTRA_IMAGE_FEATURES += "ssh-server-openssh"
 
 $ mkdir ../meta-gei/recipes-network/netconfig/netconfig
+
 $ cat ../meta-gei/recipes-network/netconfig/netconfig/ethernet.network
 [Match]
 Name=@@interface@@
@@ -163,6 +176,7 @@ IPv6AcceptRouterAdvertisements=no
 
 [DHCP]
 ClientIdentifier=mac
+
 $ cat ../meta-gei/recipes-network/netconfig/netconfig.bb
 SUMMARY = "Systemd network configuration"
 DESCRIPTION = "Scripts and configuration files to set up networking on server."
@@ -186,9 +200,10 @@ do_install () {
 FILES_${PN} = " \
 	       ${sysconfdir}/* \
 "
+```
 
 6. Ajout de librairies dans le projet
 Lorque des librairies externes sont utilisées dans le projet, on peut dire à BitBake de les introduire dans la toolchain avec : 
-``` 
-bitbake *nom_de_l_image* -c populate_sdk
+```bash
+$ bitbake *nom_de_l_image* -c populate_sdk
 ``` 
