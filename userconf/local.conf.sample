@@ -19,7 +19,7 @@ INHERIT += " rm_work "
 MACHINE = "raspberrypi3"
 ENABLE_UART = "1"
 ENABLE_SPI_BUS = "1"
-
+ENABLE_CAN = "1"
 KERNEL_DEVICETREE = " \
     bcm2708-rpi-0-w.dtb \
     bcm2708-rpi-b.dtb \
