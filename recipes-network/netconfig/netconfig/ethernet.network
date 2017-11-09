@@ -2,9 +2,7 @@
 Name=@@interface@@
 
 [Network]
-DHCP=ipv4
+DHCP=no
 LinkLocalAddressing=no
 IPv6AcceptRouterAdvertisements=no
-
-[DHCP]
-ClientIdentifier=mac
+Address=192.168.1.1

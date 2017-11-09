@@ -1,5 +1,6 @@
 require recipes-core/images/core-image-minimal.bb
 
-IMAGE_INSTALL += "htop netconfig example kernel-modules libsocketcan canutils"
+IMAGE_INSTALL += "htop netconfig example kernel-modules libsocketcan canutils dnsmasq"
+
 
 EXTRA_IMAGE_FEATURES += "ssh-server-openssh"
