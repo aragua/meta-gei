@@ -27,6 +27,7 @@ Pour la premiere utilisation seulement:
 	- `??/poky/meta-openembedded/meta-oe`
 	- `??/poky/meta-openembedded/meta-python (really????)`
 	- `??/poky/meta-raspberrypi`
+	- `??/poky/meta-openembedded/meta-networking`
 
 ---------------
 À chaque build:
