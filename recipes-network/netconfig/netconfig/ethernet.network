@@ -3,6 +3,7 @@ Name=@@interface@@
 
 [Network]
 DHCP=no
+DHCPServer=yes
 LinkLocalAddressing=no
 IPv6AcceptRouterAdvertisements=no
 Address=192.168.1.1
