@@ -5,7 +5,6 @@
 
 ---------------------------------------
 Pour la premiere utilisation seulement:
----------------------------------------
 
 - On recupere les soures
   * `git clone -b rocko git://git.yoctoproject.org/poky.git`
@@ -29,9 +28,14 @@ Pour la premiere utilisation seulement:
 	- `??/poky/meta-raspberrypi`
 	- `??/poky/meta-openembedded/meta-networking`
 
+Afin de se simplifier la vie, on peut également utiliser un template pour configurer son environnment.
+
+```
+$ TEMPLATECONF=meta-gei/userconf source ./oe-init-build-env
+```
+
 ---------------
 À chaque build:
----------------
 
 Dans poky/ on source l'environnement si ce n est pas deja fait et on lance le build.
 ```bash
@@ -50,22 +54,20 @@ Notamment la doc de meta-raspberrypi
 
 -------
 Flasher
--------
 
 Les images produites se trouvent dans :
     tmp/deploy/images/raspberrypi3/core-image-minimal-raspberrypi3.rpi-sdimg
 	                              /core-image-sato-raspberrypi3.rpi-sdimg
 
-Faire un dd (man dd) de l'image vers la carte µSD.
+Faire un dd (man dd) de l'image vers la carte µSD. On peut utiliser rufus sur windows.
 
-Se connecter a la target via lien serie (minicom
+Se connecter a la target via lien serie (minicom, putty ...)
 
 ----------------
 Personnalisation
-----------------
 
 #### 1. Créer son propre layer
--------------------------
+
 http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#creating-a-general-layer-using-the-yocto-layer-script
 
 ```
@@ -105,11 +107,10 @@ adminlocal@geitp-dimer1:~/poky/build$ tree ../meta-gei/
 7 directories, 8 files
 
 adminlocal@geitp-dimer1:~/poky/build$ bitbake example
-# doit construire le paquet example pour notre target
+;; doit construire le paquet example pour notre target
 ```
 
 #### 2. Créer une "distro" basé sur poky
------------------------------------
 ```
 $ mkdir meta-gei/conf/distro
 $ cat ../meta-gei/conf/distro/gei.conf
@@ -121,7 +122,7 @@ dans local.conf, mettre DISTRO="gei"
 recompiler votre image
 
 #### 3. Utiliser systemd comme systeme d'init
---------------------------------------
+
 http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#using-systemd-exclusively
 
 ```
@@ -138,7 +139,7 @@ $
 ```
 
 #### 4. Créer votre image
---------------------
+
 ```
 $ mkdir ../meta-gei/recipes-core/images/
 $ cat  ../meta-gei/recipes-core/images/my_image.bb
@@ -148,85 +149,30 @@ require recipes-core/images/core-image-minimal.bb
 IMAGE_INSTALL += "htop"
 ```
 
-#### 5. Ajouter un serveur SSH et configurer le reseau
--------------------------------------------------
+#### 5. Reseau ethernet
 
+Par défaut le lien ethernet est configuré pour avoir l'IP 192.168.1.1 et fournir des adresses IP au machines qui s'y connectent.
+Voir ethernet.network pour la configuration de systemd. Ce fichier est installé par la recette netconfig.bb
+
+Pour activer un serveur SSH sur cette interface, on rajoute la fonctionnalité dans notre image:
 ```
-$ cat  ../meta-gei/recipes-core/images/gei-image.bb
-
-require recipes-core/images/core-image-{minimal,sato}.bb
-
-IMAGE_INSTALL += "htop"
-
 EXTRA_IMAGE_FEATURES += "ssh-server-openssh"
-
-$ mkdir ../meta-gei/recipes-network/netconfig/netconfig
-
-$ cat ../meta-gei/recipes-network/netconfig/netconfig/ethernet.network
-[Match]
-Name=@@interface@@
-
-[Network]
-DHCP=ipv4
-LinkLocalAddressing=no
-IPv6AcceptRouterAdvertisements=no
-
-[DHCP]
-ClientIdentifier=mac
-
-$ cat ../meta-gei/recipes-network/netconfig/netconfig.bb
-SUMMARY = "Systemd network configuration"
-DESCRIPTION = "Scripts and configuration files to set up networking on server."
-SECTION = "console/network"
-LICENSE="CLOSED"
-
-REQUIRED_DISTRO_FEATURES = "systemd"
-
-SRC_URI = "file://ethernet.network"
-
-NET_IFACE ?= "eth0"
-
-inherit systemd allarch
-
-do_install () {
-	      install -d ${D}${sysconfdir}/systemd/network
-              install -m 0644 ${WORKDIR}/ethernet.network ${D}${sysconfdir}/systemd/network/
-	      sed -i -e "s:@@interface@@:${NAS_IFACE}:" ${D}${sysconfdir}/systemd/network/ethernet.network
-}
-
-FILES_${PN} = " \
-	       ${sysconfdir}/* \
-"
 ```
 
 #### 6. Ajout de librairies dans le projet
+
 Lorque des librairies externes sont utilisées dans le projet, on peut dire à BitBake de les introduire dans la toolchain avec : 
 ```bash
 $ bitbake *nom_de_l_image* -c populate_sdk
 ``` 
 
-------------------------------------------------------
-Nouvelle version de meta-gei pour faire marcher le CAN
-------------------------------------------------------
+#### 7. CAN
 
-Pourquoi ça marchait pas ? Parce qu'on devait modifier la variable KERNEL_DEVICETREE dans local.conf et pas dans le .bb ou .bbappend !
-
-On a fait les modifs dans local.conf. En plus, on a rajouté ces lignes dans config.txt dans la partition du boot statiquement dans les configs de Yocto (vous avez pas à le faire) : 
+Dans local.conf (cf template), on a modifié la variable KERNEL_DEVICETREE pour avoir lebon device tree overlay.
+Il faut également ajouté la ligne suivante dans le fichier config.txt (fichier deconf Rpi):
 
 ```
 dtoverlay=mcp2515-can0,oscillator=16000000,interrupt=25
 ```
 
-Vu que local.conf est dans build, on utilise un template de conf qui est lui dans meta-gei
-
-Au lieu de faire le source normal, faire un
-
-```
-$ TEMPLATECONF=meta-gei/userconf source ./oe-init-build-env
-```
-
-A partir de là, il faut faire des trucs sur la carte
-http://skpang.co.uk/catalog/images/raspberrypi/pi_2/PICAN2SMPSUGB.pdf ça, notamment le ip link (on est pas allé plus loin)
-
-et vamos. Bises, Lulu.
- 
+La documentation pour faire fonctionner le CAN est disponible : http://skpang.co.uk/catalog/images/raspberrypi/pi_2/PICAN2SMPSUGB.pdf
