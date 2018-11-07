@@ -6,4 +6,4 @@ DHCP=no
 DHCPServer=yes
 LinkLocalAddressing=no
 IPv6AcceptRouterAdvertisements=no
-Address=192.168.1.1
+Address=10.0.0.1
