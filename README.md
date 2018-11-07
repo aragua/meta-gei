@@ -7,11 +7,11 @@
 Pour la premiere utilisation seulement:
 
 - On recupere les soures
-  * `git clone -b rocko git://git.yoctoproject.org/poky.git`
+  * `git clone -b sumo git://git.yoctoproject.org/poky.git`
   * `cd poky`
-  * `git clone -b rocko git://git.openembedded.org/meta-openembedded`
-  * `git clone -b rocko git://git.yoctoproject.org/meta-raspberrypi`
-  * `git clone -b rocko https://github.com/aragua/meta-gei.git`
+  * `git clone -b sumo git://git.openembedded.org/meta-openembedded`
+  * `git clone -b sumo git://git.yoctoproject.org/meta-raspberrypi`
+  * `git clone -b sumo https://github.com/aragua/meta-gei.git`
 
 ```bash
   source ./oe-init-build-env
@@ -40,14 +40,14 @@ $ TEMPLATECONF=meta-gei/userconf source ./oe-init-build-env
 Dans poky/ on source l'environnement si ce n est pas deja fait et on lance le build.
 ```bash
      $ source ./oe-init-build-env
-     $ bitbake core-image-minimal
+     $ bitbake gei-image-minimal
                    ^ nom de l'image a construire.
-		   il y a une recette (.bb) associé.
+		   il y a une recette (.bb) associée.
 
-     $ bitbake core-image-sato -> image avec interface graphique
+     $ bitbake gei-image-sato -> image avec interface graphique
 ```
 Images disponibles:
-http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#ref-images
+http://www.yoctoproject.org/docs/2.5/mega-manual/mega-manual.html#ref-images
 
 Pendant la compilation, jeter un coup d'oeil au different layer.
 Notamment la doc de meta-raspberrypi
@@ -68,7 +68,7 @@ Personnalisation
 
 #### 1. Créer son propre layer
 
-http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#creating-a-general-layer-using-the-yocto-layer-script
+http://www.yoctoproject.org/docs/2.5/mega-manual/mega-manual.html#creating-a-general-layer-using-the-yocto-layer-script
 
 ```
 adminlocal@geitp-dimer1:~/poky/build$ yocto-layer create meta-gei -o ..
@@ -151,7 +151,7 @@ IMAGE_INSTALL += "htop"
 
 #### 5. Reseau ethernet
 
-Par défaut le lien ethernet est configuré pour avoir l'IP 192.168.1.1 et fournir des adresses IP au machines qui s'y connectent.
+Par défaut le lien ethernet est configuré pour avoir l'IP 10.0.0.1 et fournir des adresses IP au machines qui s'y connectent.
 Voir ethernet.network pour la configuration de systemd. Ce fichier est installé par la recette netconfig.bb
 
 Pour activer un serveur SSH sur cette interface, on rajoute la fonctionnalité dans notre image:
@@ -176,3 +176,8 @@ dtoverlay=mcp2515-can0,oscillator=16000000,interrupt=25
 ```
 
 La documentation pour faire fonctionner le CAN est disponible : http://skpang.co.uk/catalog/images/raspberrypi/pi_2/PICAN2SMPSUGB.pdf
+
+#### 8. Wifi
+
+Le réseau wifi est configuré pour se connecter au reseau IOT de l INSA automatiquement au demarrage.
+L'authentification est géré par la recette wpa_supplicant et l interface par netconfig.
